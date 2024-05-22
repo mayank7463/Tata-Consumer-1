@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Donut Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        .charts {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+        .chart {
+            max-width: 380px;
+            width: 100%;
+        }
+        .tabs {
+            display: flex;
+            margin-right: -7px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            border-radius: 5px;
+        }
+        .tab.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .year-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10px;
+            margin-right: 12px;
+        }
+        .year {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <div class="tab active" data-series-year1="[67, 33]" data-labels-year1='["India", "International"]' data-series-year2="[71, 29]" data-labels-year2='["India", "International"]' data-year1="FY 20-21" data-year2="FY 23-24">Branded Business</div>
+    <div class="tab" data-series-year1="[65, 35]" data-labels-year1='["Beverages", "Food"]' data-series-year2="[56, 44]" data-labels-year2='["Beverages", "Food"]' data-year1="FY 20-21" data-year2="FY 23-24">India Business</div>
+    <div class="tab" data-series-year1="[92, 8]" data-labels-year1='["Core", "Growth"]' data-series-year2="[82, 18]" data-labels-year2='["Core", "Growth"]' data-year1="FY 20-21" data-year2="FY 23-24">Contribution to India Business</div>
+    <div class="tab" data-series-year1="[81, 19]" data-labels-year1='["Traditional trade", "Alternate channels"]' data-series-year2="[75, 25]" data-labels-year2='["Traditional trade", "Alternate channels"]' data-year1="FY 20-21" data-year2="FY 23-24">Alternate Channels Contribution to India Business</div>
+</div>
+
+<div class="chart-container">
+    <div class="charts hey">
+        <div id="chart-year1" class="chart"></div>
+        <div id="chart-year2" class="chart"></div>
+    </div>
+    <div class="year-container">
+        <div class="year" id="year-display1">FY 20-21</div>
+        <div class="year" id="year-display2">FY 23-24</div>
+    </div>
+</div>
+
+<script>
+    var options1 = {
+        series: [67, 33],
+        chart: {
+            width: 380,
+            height: 380,
+            type: 'donut',
+        },
+        labels: ["India", "International"],
+        dataLabels: {
+            enabled: false
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200,
+                    height: 200
+                },
+                legend: {
+                    show: false
+                }
+            }
+        }],
+        legend: {
+            position: 'bottom',
+            offsetY: 0,
+            height: 100,
+        }
+    };
+
+    var options2 = {
+        series: [71, 29],
+        chart: {
+            width: 380,
+            height: 380,
+            type: 'donut',
+        },
+        labels: ["India", "International"],
+        dataLabels: {
+            enabled: false
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 210,
+                    height: 210
+                },
+                legend: {
+                    show: false
+                }
+            }
+        }],
+        legend: {
+            position: 'bottom',
+            offsetY: 0,
+            height: 100,
+        }
+    };
+
+    var chart1 = new ApexCharts(document.querySelector("#chart-year1"), options1);
+    var chart2 = new ApexCharts(document.querySelector("#chart-year2"), options2);
+    chart1.render();
+    chart2.render();
+
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            var newSeriesYear1 = JSON.parse(this.getAttribute('data-series-year1'));
+            var newLabelsYear1 = JSON.parse(this.getAttribute('data-labels-year1'));
+            var newSeriesYear2 = JSON.parse(this.getAttribute('data-series-year2'));
+            var newLabelsYear2 = JSON.parse(this.getAttribute('data-labels-year2'));
+            var year1 = this.getAttribute('data-year1');
+            var year2 = this.getAttribute('data-year2');
+
+            chart1.updateOptions({
+                series: newSeriesYear1,
+                labels: newLabelsYear1
+            });
+
+            chart2.updateOptions({
+                series: newSeriesYear2,
+                labels: newLabelsYear2
+            });
+
+            document.getElementById('year-display1').innerText = year1;
+            document.getElementById('year-display2').innerText = year2;
+        });
+    });
+</script>
+
+</body>
+</html>
